@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    @GetMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(new LoginResponse("usuario creadio correctamente",new User()));
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(new RegisterResponse("usuario creado correctamente", 1));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(new LoginResponse("login exitoso", new User()));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout() {
-
         return ResponseEntity.ok(new LogoutResponse("logout exitoso"));
     }
 
@@ -24,6 +28,4 @@ public class UserController {
     public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(new ChangePasswordResponse("contraseña cambiada exitosamente"));
     }
-
-
 }
