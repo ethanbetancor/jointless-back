@@ -1,7 +1,7 @@
 package com.example.demo.ui.controller;
 
 import com.example.demo.domain.entities.Test;
-import com.example.demo.ui.dtos.test.GetTestResponse;
+import com.example.demo.ui.dtos.test.TestResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +12,14 @@ import java.util.List;
 @RequestMapping("/tests")
 public class TestController {
 
-    @GetMapping("/level/{levelId}")
-    public ResponseEntity<List<GetTestResponse>> getByLevel(@PathVariable long levelId) {
+    @PostMapping("/level/")
+    public ResponseEntity<List<TestResponse>> getByLevel(@RequestBody long levelId) {
         return ResponseEntity.ok(new ArrayList<>());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GetTestResponse> getTest(@PathVariable long id) {
-        return ResponseEntity.ok(new GetTestResponse(new Test()));
+    @PostMapping("/get")
+    public ResponseEntity<TestResponse> getTest(@RequestBody long id) {
+        return ResponseEntity.ok(new TestResponse(new Test()));
     }
 
 }

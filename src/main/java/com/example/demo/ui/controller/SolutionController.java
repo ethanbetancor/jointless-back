@@ -15,13 +15,13 @@ public class SolutionController {
         return ResponseEntity.ok(new SubmitSolutionResponse("solución enviada correctamente", false));
     }
 
-    @GetMapping("/level/{levelId}")
-    public ResponseEntity<List<SolutionResponse>> getByLevel(@PathVariable long levelId) {
+    @PostMapping("/level")
+    public ResponseEntity<List<SolutionResponse>> getByLevel(@RequestBody long levelId) {
         return ResponseEntity.ok(List.of());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<SolutionResponse>> getByUser(@PathVariable long userId) {
+    @PostMapping("/user")
+    public ResponseEntity<List<SolutionResponse>> getByUser(@RequestBody long userId) {
         return ResponseEntity.ok(List.of());
     }
 
