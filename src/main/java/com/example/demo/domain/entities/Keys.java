@@ -4,43 +4,46 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 
 @Entity
+@AllArgsConstructor
 public class Keys {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-	
-	@Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT")
     private String publicKey;
 
-	@Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String privateKey;
-	
-	public Keys() {}
 
-	public long getId() {
-		return id;
-	}
+    public Keys() {}
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getPublicKey() {
-		return publicKey;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
-	}
+    public String getPublicKey() {
+        return publicKey;
+    }
 
-	public String getPrivateKey() {
-		return privateKey;
-	}
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey;
-	}
-	
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
 }
