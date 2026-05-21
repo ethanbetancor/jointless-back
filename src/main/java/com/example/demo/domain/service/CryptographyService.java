@@ -16,7 +16,7 @@ import java.util.Base64;
 @Service
 public class CryptographyService {
 
-    private KeyManager keyManager;
+    private final KeyManager keyManager;
 
     public CryptographyService(KeyManager keyManager) {
         this.keyManager = keyManager;
@@ -31,4 +31,6 @@ public class CryptographyService {
             throw new EncryptionException(e.getMessage());
         }
     }
+
+
 }

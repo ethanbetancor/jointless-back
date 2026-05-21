@@ -4,6 +4,6 @@ import com.example.demo.domain.entities.User;
 
 public record LoginResponse(
         String message,
-        User user
+        String username
 ) {
 }

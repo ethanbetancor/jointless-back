@@ -1,6 +1,5 @@
-package com.example.demo.ui.controller;
+package com.example.demo.ui.controller.user;
 
-import com.example.demo.domain.entities.User;
 import com.example.demo.ui.dtos.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +7,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private final UserSubcontroller userSubcontroller;
+
+    UserController(UserSubcontroller userSubcontroller) {
+        this.userSubcontroller = userSubcontroller;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
@@ -16,7 +20,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(new LoginResponse("login exitoso", new User()));
+        return userSubcontroller.login(request);
     }
 
     @PostMapping("/logout")
