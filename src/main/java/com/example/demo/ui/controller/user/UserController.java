@@ -30,6 +30,6 @@ public class UserController {
 
     @PutMapping("/change-password")
     public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody ChangePasswordRequest request) {
-        return ResponseEntity.ok(new ChangePasswordResponse("contraseña cambiada exitosamente"));
+        return userSubcontroller.changePassword(request);
     }
 }

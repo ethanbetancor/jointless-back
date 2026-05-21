@@ -2,6 +2,7 @@ package com.example.demo.domain.service;
 
 import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
+import com.example.demo.ui.dtos.user.ChangePasswordRequest;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -60,4 +61,21 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
         
     }
+    
+    public boolean changePassword(ChangePasswordRequest request) {
+    	User user = this.getUser(request.credentialEncripted());
+    	
+    	if (user == null) {
+			return false;
+		}
+    	
+    	if (!passwordEncoder.matches(request.newPassword() , user.getPassword())) {
+			return false;
+		}
+    	user.setPassword(passwordEncoder.encode(request.newPassword()));
+    	userRepository.save(user);
+    	return true;
+    }
+    
+    
 }
