@@ -28,11 +28,13 @@ public class UserService {
         String email = parts[0];
         String password = parts[1];
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-        return passwordEncoder.matches(password, user.password()) && userRepository.findByEmail(email).isPresent();
+        return passwordEncoder.matches(password, user.getPassword()) && userRepository.findByEmail(email).isPresent();
 
     }
 
     public boolean register(String credentialsEncripted) {
+        System.out.println("[" + credentialsEncripted + "]");
+        System.out.println(credentialsEncripted.length());
         String credentials = cryptographyService.decrypt(credentialsEncripted);
         String[] parts = credentials.split(":");
         String email = parts[0];

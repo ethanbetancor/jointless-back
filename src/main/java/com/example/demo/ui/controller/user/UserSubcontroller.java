@@ -22,7 +22,7 @@ class UserSubcontroller {
     		if(userPasswordAndEmail==null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         
     		if(userService.logIn(userPasswordAndEmail)){
-            return ResponseEntity.ok().body(new LoginResponse("Login exitoso", userService.getUser(userPasswordAndEmail).username()));
+            return ResponseEntity.ok().body(new LoginResponse("Login exitoso", userService.getUser(userPasswordAndEmail).getUsername()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
@@ -31,7 +31,7 @@ class UserSubcontroller {
 		if(userData==null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     		if(userService.register(userData)) {
-    			return ResponseEntity.ok().body(new RegisterResponse("Registro exitoso",userService.getUser(userData).username()));
+    			return ResponseEntity.ok().body(new RegisterResponse("Registro exitoso",userService.getUser(userData).getUsername()));
     		}
     		return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }

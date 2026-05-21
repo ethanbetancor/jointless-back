@@ -23,7 +23,9 @@ public class CryptographyService {
     }
 
     public String decrypt(String cryptedText) {
+
         try {
+
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, keyManager.getRSAprivateKey());
             return new String(cipher.doFinal(Base64.getDecoder().decode(cryptedText)));

@@ -1,9 +1,8 @@
 package com.example.demo.domain.security;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
 import com.example.demo.data.KeysRepository;
@@ -46,9 +45,10 @@ public class KeyManager {
 		return keysRepository.findAll().getFirst().getPublicKey();
     }
 
-	public String getRSAprivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-		
-		return keysRepository.findAll().getFirst().getPrivateKey();
+	public PrivateKey getRSAprivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+		String privString = keysRepository.findAll().getFirst().getPrivateKey();
+		byte[] privBytes = Base64.getDecoder().decode(privString);
+		return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privBytes));
 	}
 	
 }
