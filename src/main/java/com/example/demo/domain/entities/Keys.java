@@ -26,5 +26,21 @@ public class Keys {
     @Column(columnDefinition = "TEXT")
     private String privateKey;
 
+	public Keys(long id, String publicKey, String privateKey) {
 
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
+	}
+
+    
 }

@@ -1,19 +1,13 @@
 package com.example.demo.domain.security;
 
-import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.PublicKey;
-import java.security.PrivateKey;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import com.example.demo.data.KeysRepository;
 import com.example.demo.domain.entities.Keys;
-import com.example.demo.domain.exceptions.EncryptionException;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
@@ -48,20 +42,13 @@ public class KeyManager {
 
 	}
 
-	public PublicKey getRSApublicKey() {
-		String pubString = keysRepository.findAll().getFirst().getPublicKey();
-		byte[] pubBytes = Base64.getDecoder().decode(pubString);
-        try {
-            return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubBytes));
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new EncryptionException(e.getMessage());
-        }
+	public String getRSApublicKey() {
+		return keysRepository.findAll().getFirst().getPublicKey();
     }
 
-	public PrivateKey getRSAprivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-		String privString = keysRepository.findAll().getFirst().getPrivateKey();
-		byte[] privBytes = Base64.getDecoder().decode(privString);
-		return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privBytes));
+	public String getRSAprivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+		
+		return keysRepository.findAll().getFirst().getPrivateKey();
 	}
 	
 }
