@@ -9,6 +9,7 @@ import java.util.Base64;
 
 import com.example.demo.data.KeysRepository;
 import com.example.demo.domain.entities.Keys;
+import com.example.demo.domain.exceptions.EncryptionException;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
@@ -43,11 +44,15 @@ public class KeyManager {
 
 	}
 
-	public PublicKey getRSApublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+	public PublicKey getRSApublicKey() {
 		String pubString = keysRepository.findAll().getFirst().getPublicKey();
 		byte[] pubBytes = Base64.getDecoder().decode(pubString);
-		return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubBytes));
-	}
+        try {
+            return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubBytes));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            throw new EncryptionException(e.getMessage());
+        }
+    }
 
 	public PrivateKey getRSAprivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String privString = keysRepository.findAll().getFirst().getPrivateKey();
