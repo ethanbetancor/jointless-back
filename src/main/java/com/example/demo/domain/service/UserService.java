@@ -5,18 +5,22 @@ import com.example.demo.domain.entities.User;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final CryptographyService cryptographyService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public UserService(CryptographyService cryptographyService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.cryptographyService = cryptographyService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public boolean logIn(String credentialsEncripted) {
         String credentials = cryptographyService.decrypt(credentialsEncripted);

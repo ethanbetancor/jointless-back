@@ -1,10 +1,14 @@
 package com.example.demo.domain.security;
 
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.security.PrivateKey;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 import java.util.Base64;
 
 import com.example.demo.data.KeysRepository;
@@ -35,7 +39,7 @@ public class KeyManager {
 	}
 	
 	private void generate() throws NoSuchAlgorithmException {
-			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");	
+			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
 			generator.initialize(2048);
 			KeyPair pair = generator.generateKeyPair();
 			keysRepository.save(new Keys(0,
