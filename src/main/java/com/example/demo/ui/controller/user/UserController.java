@@ -15,7 +15,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(new RegisterResponse("usuario creado correctamente", 1));
+        return userSubcontroller.register(request);
     }
 
     @PostMapping("/login")
