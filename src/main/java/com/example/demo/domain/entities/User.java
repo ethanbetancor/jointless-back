@@ -2,9 +2,14 @@ package com.example.demo.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+<<<<<<< Updated upstream
+=======
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+>>>>>>> Stashed changes
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
