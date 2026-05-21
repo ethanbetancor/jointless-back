@@ -33,15 +33,15 @@ public class UserService {
         return false;
     }
 
-    public void register(String credentialsEncripted) {
+    public boolean register(String credentialsEncripted) {
         String credentials = cryptographyService.decrypt(credentialsEncripted);
         String[] parts = credentials.split(":");
         String email = parts[0];
         String user = parts[1];
         String password = parts[2];
-        userRepository.findByEmail(email).orElseThrow(() -> new EntityExistsException("Ya existe un usuario con este mail"));
+        if(userRepository.findByEmail(email).isPresent()) return false;
         userRepository.save(new User(0, email, user, passwordEncoder.encode(password)));
-
+        return true;
     }
 
     public boolean logOut(String credentialsEncripted) {//estoy hay que preguntar
