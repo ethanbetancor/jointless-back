@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserSubcontroller {
+class UserSubcontroller {
     private final UserService userService;
 
     public UserSubcontroller(UserService userService) {

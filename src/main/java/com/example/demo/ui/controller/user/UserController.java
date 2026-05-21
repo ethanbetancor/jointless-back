@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserSubcontroller userSubcontroller;
 
-    public UserController(UserSubcontroller userSubcontroller) {
+    UserController(UserSubcontroller userSubcontroller) {
         this.userSubcontroller = userSubcontroller;
     }
 
