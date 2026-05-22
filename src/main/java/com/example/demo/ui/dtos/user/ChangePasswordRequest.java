@@ -1,6 +1,7 @@
 package com.example.demo.ui.dtos.user;
 
 public record ChangePasswordRequest(
-        String newPassword
+        String newPassword,
+        String credentialEncripted
 ) {
 }
