@@ -13,10 +13,11 @@ public class User {
 	private long id;
 
 	@Email
+	@Column(nullable = false, unique = true)
 	private String email;
-
+	@Column(nullable = false)
 	private String username;
-
+	@Column(nullable = false)
 	private String password;
 
 	public User() {}

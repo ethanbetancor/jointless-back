@@ -1,22 +1,9 @@
 package com.example.demo.domain.entities;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@NoArgsConstructor
-@Getter
-@Setter
 @Table(name = "rsa_keys")
 public class Keys {
-
-	public Keys(long id, String publicKey, String privateKey) {
-		this.id=id;
-		this.publicKey = publicKey;
-		this.privateKey = privateKey;
-	}
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,7 +14,13 @@ public class Keys {
 	@Column(columnDefinition = "TEXT", length = 65536)
     private String privateKey;
 
-
+	public Keys(long id, String publicKey, String privateKey) {
+		this.id=id;
+		this.publicKey = publicKey;
+		this.privateKey = privateKey;
+	}
+	
+	public Keys() {}
 
 	public long getId() {
 		return id;
@@ -39,6 +32,18 @@ public class Keys {
 
 	public String getPrivateKey() {
 		return privateKey;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
 	}
 
 	@Override
