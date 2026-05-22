@@ -4,7 +4,6 @@ import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
 import com.example.demo.ui.dtos.user.ChangePasswordRequest;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +45,7 @@ public class UserService {
         return true;
     }
 
-    public boolean logOut(String credentialsEncripted) {//estoy hay que preguntar
+    public boolean logOut(String credentialsEncripted) {
         String credentials = cryptographyService.decrypt(credentialsEncripted);
         String[] parts = credentials.split(":");
         String email = parts[0];
@@ -63,18 +62,13 @@ public class UserService {
     }
     
     public boolean changePassword(ChangePasswordRequest request) {
-    	User user = this.getUser(request.credentialEncripted());
-    	
-    	if (user == null) {
-			return false;
-		}
-    	
-    	if (!passwordEncoder.matches(request.newPassword() , user.getPassword())) {
-			return false;
-		}
-    	user.setPassword(passwordEncoder.encode(request.newPassword()));
-    	userRepository.save(user);
-    	return true;
+	    	User user = this.getUser(request.credentialEncripted());
+	    	
+	    	if (user == null) return false;
+	    	if (!passwordEncoder.matches(request.newPassword() , user.getPassword())) return false;
+	    	user.setPassword(passwordEncoder.encode(request.newPassword()));
+	    	userRepository.save(user);
+	    	return true;
     }
     
     
