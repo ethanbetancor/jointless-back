@@ -33,8 +33,6 @@ public class UserService {
     }
 
     public boolean register(String credentialsEncripted) {
-        System.out.println("[" + credentialsEncripted + "]");
-        System.out.println(credentialsEncripted.length());
         String credentials = cryptographyService.decrypt(credentialsEncripted);
         String[] parts = credentials.split(":");
         String email = parts[0];
@@ -58,11 +56,10 @@ public class UserService {
         String[] parts = credentials.split(":");
         String email = parts[0];
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-        
     }
     
     public boolean changePassword(ChangePasswordRequest request) {
-	    	User user = this.getUser(request.credentialEncripted());
+	    	User user = this.getUser(request.credentialEncripted()); 	
 	    	
 	    	if (user == null) return false;
 	    	if (!passwordEncoder.matches(request.newPassword() , user.getPassword())) return false;
@@ -70,6 +67,4 @@ public class UserService {
 	    	userRepository.save(user);
 	    	return true;
     }
-    
-    
 }

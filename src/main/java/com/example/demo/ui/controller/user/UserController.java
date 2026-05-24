@@ -15,13 +15,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody String userData) {
-        return userSubcontroller.register(userData);
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest userData) {
+        return userSubcontroller.register(userData.credentialEncripted());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody String userPasswordAndEmail) {
-        return userSubcontroller.login(userPasswordAndEmail);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest userPasswordAndEmail) {
+        return userSubcontroller.login(userPasswordAndEmail.credentialEncripted());
     }
 
     @PostMapping("/logout")
