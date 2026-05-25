@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lvl")
+@RequestMapping("api/v1/lvl")
 public class LevelController {
 	
     @PostMapping("/get")

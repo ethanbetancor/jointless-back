@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/solutions")
+@RequestMapping("api/v1/solutions")
 public class SolutionController {
 
     @PostMapping
