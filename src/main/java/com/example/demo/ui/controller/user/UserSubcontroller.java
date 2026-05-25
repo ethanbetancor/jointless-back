@@ -43,11 +43,9 @@ class UserSubcontroller {
     	if (!userService.logIn(request.credentialEncripted())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ChangePasswordResponse("El usuario no esta logeado"));
 		}
-    	
     	if (userService.changePassword(request)) {
 			return ResponseEntity.ok().body(new ChangePasswordResponse("Cambio de la password exitoso"));
 		}
     	return ResponseEntity.badRequest().body(new ChangePasswordResponse("No se pudo realizar el cambio"));
-
     }
 }

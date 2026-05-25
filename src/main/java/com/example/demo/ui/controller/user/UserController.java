@@ -15,13 +15,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody String userData) {
-        return userSubcontroller.register(userData);
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest userData) {
+        return userSubcontroller.register(userData.credentialEncripted());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody String userPasswordAndEmail) {
-        return userSubcontroller.login(userPasswordAndEmail);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest userPasswordAndEmail) {
+        return userSubcontroller.login(userPasswordAndEmail.credentialEncripted());
     }
 
     @PostMapping("/logout")
@@ -29,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok(new LogoutResponse("logout exitoso"));
     }
 
-    @PutMapping("/change-password")
+    @PostMapping("/change-password")
     public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         return userSubcontroller.changePassword(request);
     }

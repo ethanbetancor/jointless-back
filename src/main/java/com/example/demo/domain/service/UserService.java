@@ -63,10 +63,10 @@ public class UserService {
     
     public boolean changePassword(ChangePasswordRequest request) {
 	    	User user = this.getUser(request.credentialEncripted());
-	    	
+	    	String password = cryptographyService.decrypt(request.newPassword());
 	    	if (user == null) return false;
-	    	if (!passwordEncoder.matches(request.newPassword() , user.getPassword())) return false;
-	    	user.setPassword(passwordEncoder.encode(request.newPassword()));
+	    	if (passwordEncoder.matches(password , user.getPassword())) return false;
+	    	user.setPassword(passwordEncoder.encode(password));
 	    	userRepository.save(user);
 	    	return true;
     }
