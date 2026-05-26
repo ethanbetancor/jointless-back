@@ -12,6 +12,9 @@ public class Test {
     @JoinColumn(name = "level_id")
     private Level level;
 
-    private String input;
-    private String test;
+    private String testPath;
+
+    public long getId(){
+        return id;
+    }
 }
