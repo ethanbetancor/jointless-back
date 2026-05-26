@@ -2,6 +2,7 @@ package com.example.demo.domain.service;
 
 import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
+import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.ui.dtos.user.ChangePasswordRequest;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -15,21 +16,17 @@ public class UserService {
     private final CryptographyService cryptographyService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CredentialsValidator credentialsValidator;
 
-    public UserService(CryptographyService cryptographyService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(CryptographyService cryptographyService, UserRepository userRepository, PasswordEncoder passwordEncoder, CredentialsValidator credentialsValidator) {
         this.cryptographyService = cryptographyService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.credentialsValidator = credentialsValidator;
     }
 
     public boolean logIn(String credentialsEncripted) {
-        String credentials = cryptographyService.decrypt(credentialsEncripted);
-        String[] parts = credentials.split(":");
-        String email = parts[0];
-        String password = parts[1];
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-        return passwordEncoder.matches(password, user.getPassword()) && userRepository.findByEmail(email).isPresent();
-
+        return credentialsValidator.check(credentialsEncripted);
     }
 
     public boolean register(String credentialsEncripted) {

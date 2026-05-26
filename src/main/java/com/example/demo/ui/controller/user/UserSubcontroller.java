@@ -33,10 +33,10 @@ class UserSubcontroller {
     protected ResponseEntity<RegisterResponse> register(String userData){
 		if(userData==null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-    		if(userService.register(userData)) {
-    			return ResponseEntity.ok().body(new RegisterResponse("Registro exitoso",userService.getUser(userData).getUsername()));
-    		}
-    		return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if(userService.register(userData)) {
+            return ResponseEntity.ok().body(new RegisterResponse("Registro exitoso",userService.getUser(userData).getUsername()));
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }  		
     		
     protected ResponseEntity<ChangePasswordResponse> changePassword(ChangePasswordRequest request){
