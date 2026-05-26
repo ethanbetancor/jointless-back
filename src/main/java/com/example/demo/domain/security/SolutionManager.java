@@ -18,7 +18,8 @@ public class SolutionManager {
 	public SolutionManager(LevelRepository levelRepository) {
 		this.levelRepository=levelRepository;
 	}
-	@PostConstruct
+
+	//@PostConstruct //preguntar a david
 	private void generateTemporalPath() throws IOException {
 		try {
 			path = Files.createTempDirectory("solution-");
@@ -28,7 +29,7 @@ public class SolutionManager {
 		}
 	}
 	
-	public boolean generateTemporalSolutionCode(String code) throws IOException {
+	private boolean generateTemporalSolutionCode(String code) throws IOException {
 		if(code==null || code.isBlank()) return false;
 		try {
 			Files.writeString(path.resolve("Solution.java"), code);
@@ -38,13 +39,24 @@ public class SolutionManager {
 		}
 	}
 	
-	public boolean generateTemporalSolutionTest(String testID) throws IOException {
-		if(testID==null || testID.isBlank()) return false;
+	private boolean generateTemporalSolutionTest(Long testID) throws IOException {
+		if(testID==null) return false;
 		try {
-			Files.writeString(path.resolve("SolutionTest.java"), Files.readString(Paths.get(levelRepository.getTestPath())));
+			Files.writeString(path.resolve("SolutionTest.java"), Files.readString(Paths.get(levelRepository.findById(testID).orElseThrow().getTestPath())));
 			return true;
 		} catch (IOException e) {
 			throw new IOException("Error in the process of creating the Solution.java in the temporal path");
 		}
+
+		return true;
+	}
+
+	public boolean generateAll(String code, Long testID) throws IOException {
+		this.generateTemporalPath();
+        return this.generateTemporalSolutionTest(testID) && generateTemporalSolutionCode(code);
+    }
+
+	public Path getPath() {
+		return path;
 	}
 }

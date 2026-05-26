@@ -1,8 +1,7 @@
 package com.example.demo.ui.dtos.solution;
 
-public record SubmitSolutionResponse(
+public record SubmitResponse(
         String message,
-        boolean passed
+        Boolean success
 ) {
 }
-

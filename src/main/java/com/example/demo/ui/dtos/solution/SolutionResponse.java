@@ -1,11 +1,9 @@
 package com.example.demo.ui.dtos.solution;
 
+import com.example.demo.domain.entities.Solution;
+
 public record SolutionResponse(
-        long id,
-        long levelId,
-        long userId,
-        String code,
-        boolean passed
+        Solution solution
 ) {
 }
 
