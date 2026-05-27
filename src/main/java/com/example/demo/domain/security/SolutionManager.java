@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.data.LevelRepository;
+
 import jakarta.annotation.PostConstruct;
 
 @Component

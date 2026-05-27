@@ -1,5 +1,8 @@
 package com.example.demo.domain.service;
 
+import com.example.demo.data.LevelRepository;
+import com.example.demo.data.SolutionRepository;
+import com.example.demo.data.TestRepository;
 import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.Level;
 import com.example.demo.domain.entities.Solution;
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SolutionService {
+
     private final DockerService dockerService;
     private final TestRepository testRepository;
     private final SolutionRepository solutionRepository;
@@ -72,5 +76,9 @@ public class SolutionService {
                 .findFirst()
                 .map(line -> line.replaceAll(".*expected:", "expected:").trim())
                 .orElse("test fallido");
+    }
+    
+    public boolean isLevelPassedByUser(Long idLevel , Long idUser) {
+    		return solutionRepository.existsByLevelIdAndUserIdAndPassedTrue(idLevel, idUser);
     }
 }

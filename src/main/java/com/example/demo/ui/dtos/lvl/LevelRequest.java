@@ -1,7 +1,7 @@
 package com.example.demo.ui.dtos.lvl;
 
 public record LevelRequest (
-		int id,
+		Long id,
 		String credentialEncripted)
 {
 }

@@ -4,6 +4,9 @@ import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.CryptographyService;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

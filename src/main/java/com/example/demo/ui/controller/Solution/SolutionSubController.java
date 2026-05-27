@@ -27,5 +27,4 @@ public class SolutionSubController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
 }
