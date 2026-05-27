@@ -1,23 +1,19 @@
 package com.example.demo.ui.controller.level;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.demo.data.SolutionRepository;
+
 import com.example.demo.domain.entities.Level;
-import com.example.demo.domain.entities.User;
 import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.domain.service.LevelService;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.ui.dtos.lvl.AllLevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelCategoryRequest;
-import com.example.demo.ui.dtos.lvl.LevelCategoryResponse;
 import com.example.demo.ui.dtos.lvl.LevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelResponse;
 
@@ -73,25 +69,4 @@ public class LevelSubController {
 			}).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 		}
 		
-	public ResponseEntity<LevelCategoryResponse> isCategoryCompleted(@RequestBody LevelCategoryRequest request) {
-		return credentialsValidator.check(request.credentialEncripted()).map(user -> {
-			List<Level> levels = levelService.getLevelsByCategory(request.category());
-			if (levels.isEmpty()) {
-				return ResponseEntity.ok(new LevelCategoryResponse(-1));
-			}
-
-			long approvedCount = levels.stream()
-					.filter(level -> solutionService.isLevelPassedByUser(level.getId(), user.getId())).count();
-			int status;
-			if (approvedCount == 0) {
-				status = -1;
-			} else if (approvedCount == levels.size()) {
-				status = 1;
-			} else {
-				status = 0;
-			}
-			return ResponseEntity.ok(new LevelCategoryResponse(status));
-
-		}).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-	}
 }
