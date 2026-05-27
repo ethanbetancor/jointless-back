@@ -2,6 +2,8 @@ package com.example.demo.domain.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ public class Level {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Column(columnDefinition = "TEXT")
@@ -60,6 +63,7 @@ public class Level {
 	public void setStarterCode(String starterCode) {
 		this.starterCode = starterCode;
 	}
+
 }
 
 enum Category {

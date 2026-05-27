@@ -14,7 +14,13 @@ public class Test {
 
     private String testPath;
 
-    public long getId(){
-        return id;
+    public Test() {}
+
+    public Test(Level level, String testPath) {
+        this.level = level;
+        this.testPath = testPath;
     }
+
+    public long getId() { return id; }
+    public String getTestPath() { return testPath; }
 }

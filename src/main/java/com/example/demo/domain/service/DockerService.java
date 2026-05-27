@@ -24,7 +24,7 @@ public class DockerService {
     public DockerResult runInContainer(String userCode, Long testId) {
         Path tempDir = null;
         try {
-            solutionManager.generateAll(userCode, testId);
+            tempDir = solutionManager.generateAll(userCode, testId);
 
             ProcessBuilder pb = new ProcessBuilder(
                     "docker", "run", "--rm",

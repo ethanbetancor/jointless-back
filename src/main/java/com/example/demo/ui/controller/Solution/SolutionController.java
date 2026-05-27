@@ -17,7 +17,7 @@ public class SolutionController {
 
     @PostMapping("/submit")
     public ResponseEntity<SubmitResponse> submit(@RequestBody SubmitRequest request) {
-        return solutionSubController.submit(request.code(), request.LevelId(),request.credentialsEncrypted());
+        return solutionSubController.submit(request.code(), request.levelId(), request.credentialsEncrypted());
     }
 
     @PostMapping("/level")
