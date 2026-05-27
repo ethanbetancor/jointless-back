@@ -36,12 +36,12 @@ public class SolutionService {
         Test test = testRepository.findByLevelId(levelId);
         DockerResult result = dockerService.runInContainer(code, test.getId());
         boolean passed = result.getExitCode() == 0;
-
-        Level level = levelRepository.findById(levelId).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
-
-        Solution solution = new Solution(level, user, code, passed);
-        solutionRepository.save(solution);
+        if(passed) {
+        	Level level = levelRepository.findById(levelId).orElseThrow();
+            User user = userRepository.findById(userId).orElseThrow();
+            Solution solution = new Solution(level, user, code, passed);
+            solutionRepository.save(solution);
+        }
 
         return parseOutput(result.getOutput(), result.getExitCode());
     }
