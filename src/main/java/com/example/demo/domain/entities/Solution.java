@@ -21,4 +21,13 @@ public class Solution {
     private String code;
 
     private boolean passed;
+
+    public Solution() {}
+
+    public Solution(Level level, User user, String code, boolean passed) {
+        this.level = level;
+        this.user = user;
+        this.code = code;
+        this.passed = passed;
+    }
 }

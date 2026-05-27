@@ -1,4 +1,4 @@
-package com.example.demo.ui.controller;
+package com.example.demo.ui.controller.Solution;
 
 import com.example.demo.ui.dtos.solution.*;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,15 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/solutions")
 public class SolutionController {
+    private final SolutionSubController solutionSubController;
 
-    @PostMapping
-    public ResponseEntity<SubmitSolutionResponse> submit(@RequestBody SubmitSolutionRequest request) {
-        return ResponseEntity.ok(new SubmitSolutionResponse("solución enviada correctamente", false));
+    public SolutionController(SolutionSubController solutionSubController) {
+        this.solutionSubController = solutionSubController;
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<SubmitResponse> submit(@RequestBody SubmitRequest request) {
+        return solutionSubController.submit(request.code(), request.LevelId(),request.credentialsEncrypted());
     }
 
     @PostMapping("/level")
