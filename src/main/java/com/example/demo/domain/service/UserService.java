@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public boolean logIn(String credentialsEncripted) {
-        return credentialsValidator.check(credentialsEncripted);
+        return credentialsValidator.check(credentialsEncripted).isPresent();
     }
 
     public boolean register(String credentialsEncripted) {

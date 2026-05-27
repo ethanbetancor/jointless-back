@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("api/v1/tests")
 public class TestController {
 
-    @PostMapping("/level/")
+    @PostMapping("/level")
     public ResponseEntity<List<TestResponse>> getByLevel(@RequestBody long levelId) {
         return ResponseEntity.ok(new ArrayList<>());
     }
