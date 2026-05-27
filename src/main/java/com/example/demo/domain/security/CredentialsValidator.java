@@ -4,6 +4,9 @@ import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.CryptographyService;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +22,13 @@ public final class CredentialsValidator {
         this.userRepository = userRepository;
     }
 
-    public boolean check(String credentialsEncrypted) {
+    public Optional<User> check(String credentialsEncrypted) {
         String credentials = cryptographyService.decrypt(credentialsEncrypted);
         String[] parts = credentials.split(":");
         String email = parts[0];
         String password = parts[1];
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-        return passwordEncoder.matches(password, user.getPassword());
+        if (passwordEncoder.matches(password, user.getPassword())) return Optional.of(user);
+        else  return Optional.empty();
     }
 }

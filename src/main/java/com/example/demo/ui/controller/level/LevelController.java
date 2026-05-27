@@ -1,6 +1,9 @@
 package com.example.demo.ui.controller.level;
 
 import com.example.demo.domain.entities.Level;
+import com.example.demo.ui.dtos.lvl.AllLevelRequest;
+import com.example.demo.ui.dtos.lvl.LevelCategoryRequest;
+import com.example.demo.ui.dtos.lvl.LevelCategoryResponse;
 import com.example.demo.ui.dtos.lvl.LevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelResponse;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +25,17 @@ public class LevelController {
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<List<LevelResponse>> getAllLevels() {
-        return levelSubcontroller.getAllLevels();
+    public ResponseEntity<List<LevelResponse>> getAllLevels(@RequestBody AllLevelRequest request) {
+        return levelSubcontroller.getAllLevels(request);
+    }
+    
+    @PostMapping("/get/category")
+    public ResponseEntity<List<LevelResponse>> getLevelsByCategory(@RequestBody LevelCategoryRequest request){
+    		return levelSubcontroller.getLevelsByCategory(request);
+    }
+    
+    @PostMapping("/get/isCategoryCompleted")
+    public ResponseEntity<LevelCategoryResponse> isCategoryCompleted(@RequestBody LevelCategoryRequest request){
+    		return levelSubcontroller.isCategoryCompleted(request);
     }
 }

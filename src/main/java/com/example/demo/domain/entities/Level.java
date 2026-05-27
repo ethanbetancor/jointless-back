@@ -60,9 +60,6 @@ public class Level {
 	public void setStarterCode(String starterCode) {
 		this.starterCode = starterCode;
 	}
-    
-    
-    
 }
 
 enum Category {
