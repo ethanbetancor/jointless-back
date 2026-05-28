@@ -23,7 +23,7 @@ public class CryptographyService {
     }
 
     public String decrypt(String cryptedText) {
-
+    	if(cryptedText==null) throw new NullPointerException("it has to be a not null value");
         try {
 
             Cipher cipher = Cipher.getInstance("RSA");
