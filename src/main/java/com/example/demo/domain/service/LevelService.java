@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.data.Category;
 import com.example.demo.data.LevelRepository;
 import com.example.demo.domain.entities.Level;
 import com.example.demo.ui.dtos.lvl.LevelResponse;
@@ -31,7 +32,7 @@ public class LevelService {
 		return levelRepository.findAll();
 	}
 
-	public List<Level> getLevelsByCategory(String category) {
+	public List<Level> getLevelsByCategory(Category category) {
 		return levelRepository.findByCategory(category);
 	}
 	
