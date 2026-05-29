@@ -2,11 +2,11 @@ package com.example.demo.ui.controller.level;
 
 import com.example.demo.ui.dtos.lvl.AllLevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelCategoryRequest;
+import com.example.demo.ui.dtos.lvl.LevelListResponse;
 import com.example.demo.ui.dtos.lvl.LevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/lvl")
@@ -22,13 +22,13 @@ public class LevelController {
         return levelSubcontroller.getLevelById(request);
     }
 
-    @GetMapping("/get/all")
-    public ResponseEntity<List<LevelResponse>> getAllLevels(@RequestBody AllLevelRequest request) {
+    @PostMapping("/get/all")
+    public ResponseEntity<LevelListResponse> getAllLevels(@RequestBody AllLevelRequest request) {
         return levelSubcontroller.getAllLevels(request);
     }
     
     @PostMapping("/get/category")
-    public ResponseEntity<List<LevelResponse>> getLevelsByCategory(@RequestBody LevelCategoryRequest request){
+    public ResponseEntity<LevelListResponse> getLevelsByCategory(@RequestBody LevelCategoryRequest request){
     		return levelSubcontroller.getLevelsByCategory(request);
     }
     

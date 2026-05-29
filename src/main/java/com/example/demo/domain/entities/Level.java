@@ -1,5 +1,7 @@
 package com.example.demo.domain.entities;
 
+import com.example.demo.data.Category;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +19,7 @@ public class Level {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
+    
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -63,13 +65,4 @@ public class Level {
 	public void setStarterCode(String starterCode) {
 		this.starterCode = starterCode;
 	}
-
-}
-
-enum Category {
-    SECUENCIALES,
-    CONDICIONALES,
-    BUCLES,
-    ESTRUCTURAS_DE_DATOS,
-    STREAMS
 }

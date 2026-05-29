@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+import com.example.demo.data.Category;
 import com.example.demo.domain.entities.Level;
 import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.domain.service.LevelService;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.ui.dtos.lvl.AllLevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelCategoryRequest;
+import com.example.demo.ui.dtos.lvl.LevelListResponse;
 import com.example.demo.ui.dtos.lvl.LevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelResponse;
 
@@ -35,6 +36,9 @@ public class LevelSubController {
 	}
 
 	public ResponseEntity<LevelResponse> getLevelById(@RequestBody LevelRequest request) {
+		if (request.credentialEncripted() == null || request.credentialEncripted().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 		return credentialsValidator.check(request.credentialEncripted()).map(user -> {
 			try {
 				Level level = levelService.getLevelById(request.id());
@@ -47,25 +51,35 @@ public class LevelSubController {
 		}).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
-	public ResponseEntity<List<LevelResponse>> getAllLevels(@RequestBody AllLevelRequest request) {
+	public ResponseEntity<LevelListResponse> getAllLevels(@RequestBody AllLevelRequest request) {
+		if (request.credentialEncripted() == null || request.credentialEncripted().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 		return credentialsValidator.check(request.credentialEncripted()).map(user -> {
 			List<Level> allLevels = levelService.getAllLevels();
 			List<LevelResponse> responseList = allLevels.stream().map(level -> {
 				boolean isPassed = solutionService.isLevelPassedByUser(level.getId(), user.getId());
 				return new LevelResponse(level, isPassed);
 			}).toList();
-			return ResponseEntity.ok(responseList);
+			return ResponseEntity.ok(new LevelListResponse(responseList));
 		}).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
-		public ResponseEntity<List<LevelResponse>> getLevelsByCategory(LevelCategoryRequest request) {
+		public ResponseEntity<LevelListResponse> getLevelsByCategory(LevelCategoryRequest request) {
+			if (request.credentialEncripted() == null || request.credentialEncripted().isEmpty()) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+			if (request.category() == null || request.category().isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
 			return credentialsValidator.check(request.credentialEncripted()).map(user -> {
-				List<Level> listCategory = levelService.getLevelsByCategory(request.category());
+				Category category = Category.valueOf(request.category().toUpperCase().trim());
+				List<Level> listCategory = levelService.getLevelsByCategory(category);
 				List<LevelResponse> responseList = listCategory.stream().map(level -> {
 					boolean isPassed = solutionService.isLevelPassedByUser(level.getId(), user.getId());
 					return new LevelResponse(level, isPassed);
 				}).toList();
-				return ResponseEntity.ok(responseList);
+				return ResponseEntity.ok(new LevelListResponse(responseList));
 			}).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 		}
 		
