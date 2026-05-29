@@ -19,7 +19,7 @@ public class SolutionSubController {
         this.credentialsValidator = credentialsValidator;
     }
 
-    protected ResponseEntity<SubmitResponse> submit(String code, Long levelId, String credentialsEncrypted){
+    public ResponseEntity<SubmitResponse> submit(String code, Long levelId, String credentialsEncrypted){
         if(credentialsEncrypted == null ||levelId == null ||code == null || code.isBlank() || credentialsEncrypted.isBlank()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         User user = credentialsValidator.check(credentialsEncrypted).orElse(null);
         if(user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

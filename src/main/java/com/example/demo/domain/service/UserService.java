@@ -30,8 +30,6 @@ public class UserService {
     }
 
     public boolean register(String credentialsEncripted) {
-        System.out.println("[" + credentialsEncripted + "]");
-        System.out.println(credentialsEncripted.length());
         String credentials = cryptographyService.decrypt(credentialsEncripted);
         String[] parts = credentials.split(":");
         String email = parts[0];

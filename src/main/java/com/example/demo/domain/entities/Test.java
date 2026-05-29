@@ -23,4 +23,18 @@ public class Test {
 
     public long getId() { return id; }
     public String getTestPath() { return testPath; }
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+
+	public void setTestPath(String testPath) {
+		this.testPath = testPath;
+	}
+    
+    
 }
