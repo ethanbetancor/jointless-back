@@ -109,7 +109,7 @@ class LevelSubControllerTest {
     }
     
     @Test
-    void getLevelById_whenCredentialsAreNullOrEmpty_returns401() {
+    void getLevelById_whenCredentialsAreNullOrEmpty() {
         LevelRequest request = mock(LevelRequest.class);
         when(request.credentialEncripted()).thenReturn("");
         ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request);
