@@ -3,10 +3,11 @@ package com.example.demo.ui.controller.groq;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.ui.dtos.groq.ApiRequest;
 import com.example.demo.ui.dtos.groq.ApiResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/ai")
 public class GroqController {
 
     private final GroqSubController groqSubController;
@@ -16,7 +17,7 @@ public class GroqController {
     }
 
     @PostMapping("/clue")
-    public ResponseEntity<ApiResponse> clue(@RequestBody String userPrompt) {
-    	return groqSubController.answer(userPrompt);
+    public ResponseEntity<ApiResponse> clue(@RequestBody ApiRequest apiRequest) {
+    	return groqSubController.answer(apiRequest);
     }
 }

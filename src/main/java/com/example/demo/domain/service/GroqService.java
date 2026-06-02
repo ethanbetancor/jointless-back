@@ -61,7 +61,7 @@ public class GroqService {
 					+ "* Pista o pregunta orientadora.\r\n"
 					+ "* Siguiente paso recomendado.\r\n"
 					+ "\r\n"
-					+ "Recuerda: eres un guía educativo. No eres un generador de soluciones completas. Tu éxito se mide por cuánto aprende el estudiante, no por la rapidez con la que obtiene la respuesta.\r\n"
+					+ "Recuerda: eres un guía educativo. No eres un generador de soluciones completas. Tu éxito se mide por cuánto aprende el estudiante, no por la rapidez con la que obtiene la respuesta. La respuesta debe ser muy corta\r\n"
 				);
 		GroqMessage message = new GroqMessage("user", finalPrompt.append(userPrompt).toString());
 		GroqRequest request = new GroqRequest(groqManager.getModel(), List.of(message));
