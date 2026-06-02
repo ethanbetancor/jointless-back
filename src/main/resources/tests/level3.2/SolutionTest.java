@@ -5,28 +5,28 @@ class SolutionTest {
 
     @Test
     void deberiaContarMayoresCorrectamente() {
-        Solution s = new Solution();
+        Solution solution = new Solution();
 
         int[] nums = {1, 5, 10, 15};
 
-        assertEquals(2, s.contarMayores(nums, 5));
+        assertEquals(2, solution.contarMayores(nums, 5));
     }
 
     @Test
     void deberiaDevolverCeroSiNingunoEsMayor() {
-        Solution s = new Solution();
+        Solution solution = new Solution();
 
         int[] nums = {1, 2, 3};
 
-        assertEquals(0, s.contarMayores(nums, 10));
+        assertEquals(0, solution.contarMayores(nums, 10));
     }
 
     @Test
     void deberiaContarTodosSiXEsNegativo() {
-        Solution s = new Solution();
+        Solution solution = new Solution();
 
         int[] nums = {1, 2, 3};
 
-        assertEquals(3, s.contarMayores(nums, -1));
+        assertEquals(3, solution.contarMayores(nums, -1));
     }
 }
