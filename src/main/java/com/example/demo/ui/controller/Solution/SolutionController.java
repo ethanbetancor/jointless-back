@@ -26,8 +26,8 @@ public class SolutionController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<List<SolutionResponse>> getByUser(@RequestBody long userId) {
-        return ResponseEntity.ok(List.of());
+    public ResponseEntity<SolutionListResponse> getByUser(@RequestBody SolutionRequest request) {
+        return solutionSubController.getByUser(request);
     }
 
 }
