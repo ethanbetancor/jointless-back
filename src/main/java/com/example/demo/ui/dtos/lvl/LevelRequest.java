@@ -1,7 +1,8 @@
 package com.example.demo.ui.dtos.lvl;
 
-public record LevelRequest (
-		Long id,
-		String credentialEncripted)
-{
+import jakarta.validation.constraints.NotNull;
+
+public record LevelRequest(
+        @NotNull(message = "El id del nivel no puede estar vacío")
+        Long id) {
 }

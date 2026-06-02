@@ -1,12 +1,12 @@
 package com.example.demo.ui.controller.user;
 
 import com.example.demo.ui.dtos.user.*;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/users")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UserController {
     private final UserSubcontroller userSubcontroller;
 
@@ -15,13 +15,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest userData) {
-        return userSubcontroller.register(userData.credentialEncripted());
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest userData) {
+        return userSubcontroller.register(userData);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest userPasswordAndEmail) {
-        return userSubcontroller.login(userPasswordAndEmail.credentialEncripted());
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest userPasswordAndEmail) {
+        return userSubcontroller.login(userPasswordAndEmail);
     }
 
     @PostMapping("/logout")
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         return userSubcontroller.changePassword(request);
     }
 }

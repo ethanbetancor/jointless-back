@@ -1,7 +1,8 @@
 package com.example.demo.ui.dtos.lvl;
 
-public record LevelCategoryRequest(
-		String category,
-		String credentialEncripted) {
+import jakarta.validation.constraints.NotBlank;
 
+public record LevelCategoryRequest(
+        @NotBlank(message = "La categoría no puede estar vacía")
+        String category) {
 }
