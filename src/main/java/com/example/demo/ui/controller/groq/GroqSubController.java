@@ -8,7 +8,6 @@ import com.example.demo.ui.dtos.groq.ApiRequest;
 import com.example.demo.ui.dtos.groq.ApiResponse;
 import com.example.demo.ui.dtos.groq.GroqResponse;
 
-import org.springframework.web.bind.annotation.RequestBody;
 @Component
 class GroqSubController {
     
@@ -18,7 +17,7 @@ class GroqSubController {
         this.groqService = groqService;
     }
 
-    ResponseEntity<ApiResponse> answer(@RequestBody ApiRequest apiRequest) {
+    ResponseEntity<ApiResponse> answer(ApiRequest apiRequest) {
     	
     		if (apiRequest == null || apiRequest.userPrompt() == null || apiRequest.userPrompt().isBlank()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     		
