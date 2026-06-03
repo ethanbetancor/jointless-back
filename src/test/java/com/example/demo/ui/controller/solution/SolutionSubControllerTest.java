@@ -1,6 +1,7 @@
 package com.example.demo.ui.controller.solution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -8,6 +9,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +22,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import com.example.demo.domain.entities.Level;
+import com.example.demo.domain.entities.Solution;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.domain.service.UserService;
 import com.example.demo.ui.controller.Solution.SolutionSubController;
 import com.example.demo.ui.dtos.solution.SubmitRequest;
 import com.example.demo.ui.dtos.solution.SubmitResponse;
+import com.example.demo.ui.dtos.solution.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SolutionSubControllerTest {
