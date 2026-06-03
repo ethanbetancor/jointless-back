@@ -24,15 +24,10 @@ public final class CredentialsValidator {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> check(String credentialsEncrypted) {
-        String credentials = cryptographyService.decrypt(credentialsEncrypted);
-        String[] parts = credentials.split(":");
-        String email = parts[0];
-        String password = parts[1];
-//        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-//        if (passwordEncoder.matches(password, user.getPassword())) return Optional.of(user);
-//        else  return Optional.empty();
-        return userRepository.findByEmail(email)
-        		.filter(user -> passwordEncoder.matches(password, user.getPassword()));
+    public Optional<User> check(String email, String encryptedPassword) {
+        String password = cryptographyService.decrypt(encryptedPassword);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
+        if (passwordEncoder.matches(password, user.getPassword())) return Optional.of(user);
+        else  return Optional.empty();
     }
 }

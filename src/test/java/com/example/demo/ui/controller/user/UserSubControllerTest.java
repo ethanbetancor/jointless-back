@@ -1,10 +1,9 @@
 package com.example.demo.ui.controller.user;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,140 +12,84 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.UserService;
-import com.example.demo.ui.dtos.user.ChangePasswordRequest;
-import com.example.demo.ui.dtos.user.ChangePasswordResponse;
-import com.example.demo.ui.dtos.user.LoginResponse;
-import com.example.demo.ui.dtos.user.RegisterResponse;
+import com.example.demo.ui.dtos.user.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserSubControllerTest {
-	 @Mock
-	 private UserService userService;
 
-	 @InjectMocks
-	 private UserSubcontroller controller;
-	 
-	 @Test
-	 void shouldReturnBadRequestWhenLoginInputIsNull() {
+    @Mock
+    private UserService userService;
 
-	     ResponseEntity<LoginResponse> response =
-	             controller.login(null);
+    @InjectMocks
+    private UserSubcontroller controller;
 
-	     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-	 }
-	 
-	 @Test
-	 void shouldReturnNotFoundWhenLoginFails() {
 
-	     when(userService.logIn(anyString()))
-	             .thenReturn(false);
+    @Test
+    void login_whenUserNotFound_returns404() {
+        LoginRequest request = new LoginRequest("notfound@test.com", "enc");
+        when(userService.logIn(request)).thenThrow(new EntityNotFoundException("no user"));
 
-	     ResponseEntity<LoginResponse> response =
-	             controller.login("data");
+        ResponseEntity<LoginResponse> response = controller.login(request);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 
-	     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-	 }
-	 
-	 @Test
-	 void shouldReturnOkWhenLoginIsSuccessful() {
+    @Test
+    void login_whenValidCredentials_returns200WithToken() {
+        LoginRequest request = new LoginRequest("user@test.com", "enc");
+        when(userService.logIn(request)).thenReturn(new LoginResponse("jwt-token"));
 
-	     User user = new User();
-	     user.setUsername("mar");
+        ResponseEntity<LoginResponse> response = controller.login(request);
 
-	     when(userService.logIn(anyString()))
-	             .thenReturn(true);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().token()).isEqualTo("jwt-token");
+    }
 
-	     when(userService.getUser(anyString()))
-	             .thenReturn(user);
 
-	     ResponseEntity<LoginResponse> response =
-	             controller.login("data");
+    @Test
+    void register_whenEmailAlreadyExists_returns409() {
+        RegisterRequest request = new RegisterRequest("John", "existing@test.com", "enc");
+        when(userService.register(request)).thenReturn(new RegisterResponse(null));
 
-	     assertEquals(HttpStatus.OK, response.getStatusCode());
-	     assertEquals("mar", response.getBody().username());
-	 }
-	 
-	 @Test
-	 void shouldReturnConflictWhenUserAlreadyExists() {
+        ResponseEntity<RegisterResponse> response = controller.register(request);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
 
-	     when(userService.register(anyString()))
-	             .thenReturn(false);
+    @Test
+    void register_whenNewUser_returns200WithToken() {
+        RegisterRequest request = new RegisterRequest("John", "john@test.com", "enc");
+        when(userService.register(request)).thenReturn(new RegisterResponse("jwt-token"));
 
-	     ResponseEntity<RegisterResponse> response =
-	             controller.register("data");
+        ResponseEntity<RegisterResponse> response = controller.register(request);
 
-	     assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-	 }
-	 
-	 @Test
-	 void shouldReturnOkWhenRegisterSuccess() {
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().token()).isEqualTo("jwt-token");
+    }
 
-	     User user = new User();
-	     user.setUsername("mar");
 
-	     when(userService.register(anyString()))
-	             .thenReturn(true);
+    @Test
+    void changePassword_whenSuccess_returns200WithMessage() {
+        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass", "user@test.com");
+        when(userService.changePassword(request)).thenReturn(true);
 
-	     when(userService.getUser(anyString()))
-	             .thenReturn(user);
+        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request);
 
-	     ResponseEntity<RegisterResponse> response =
-	             controller.register("data");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().message()).isEqualTo("Cambio de la password exitoso");
+    }
 
-	     assertEquals(HttpStatus.OK, response.getStatusCode());
-	     assertEquals("mar", response.getBody().username());
-	 }
-	 
-	 @Test
-	 void shouldReturnUnauthorizedWhenNotLoggedIn() {
+    @Test
+    void changePassword_whenFails_returns400WithMessage() {
+        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass", "user@test.com");
+        when(userService.changePassword(request)).thenReturn(false);
 
-	     ChangePasswordRequest request =
-	             new ChangePasswordRequest("cred", "newPass");
+        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request);
 
-	     when(userService.logIn(anyString()))
-	             .thenReturn(false);
-
-	     ResponseEntity<ChangePasswordResponse> response =
-	             controller.changePassword(request);
-
-	     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-	 }
-	 
-	 @Test
-	 void shouldReturnOkWhenPasswordChanged() {
-
-	     ChangePasswordRequest request =
-	             new ChangePasswordRequest("cred", "newPass");
-
-	     when(userService.logIn(anyString()))
-	             .thenReturn(true);
-
-	     when(userService.changePassword(any()))
-	             .thenReturn(true);
-
-	     ResponseEntity<ChangePasswordResponse> response =
-	             controller.changePassword(request);
-
-	     assertEquals(HttpStatus.OK, response.getStatusCode());
-	 }
-	 
-	 @Test
-	 void shouldReturnBadRequestWhenPasswordChangeFails() {
-
-	     ChangePasswordRequest request =
-	             new ChangePasswordRequest("cred", "newPass");
-
-	     when(userService.logIn(anyString()))
-	             .thenReturn(true);
-
-	     when(userService.changePassword(any()))
-	             .thenReturn(false);
-
-	     ResponseEntity<ChangePasswordResponse> response =
-	             controller.changePassword(request);
-
-	     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-	 }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().message()).isEqualTo("No se pudo realizar el cambio");
+    }
 }

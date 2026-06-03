@@ -83,8 +83,8 @@ public class SolutionService {
                 .orElse("test fallido");
     }
     
-    public boolean isLevelPassedByUser(Long idLevel , Long idUser) {
-    		return solutionRepository.existsByLevelIdAndUserIdAndPassedTrue(idLevel, idUser);
+    public boolean isLevelPassedByUserEmail(Long idLevel , String email) {
+    		return solutionRepository.existsByLevelIdAndUser_EmailAndPassedTrueAndPassedTrue(idLevel, email);
     }
     
     public List<Solution> getByUser(long idUser) {

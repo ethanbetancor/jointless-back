@@ -1,14 +1,16 @@
 package com.example.demo.ui.dtos.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,15 +18,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
-import com.example.demo.data.Category;
+import com.example.demo.domain.entities.Category;
 import com.example.demo.domain.entities.Level;
-import com.example.demo.domain.entities.User;
-import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.domain.service.LevelService;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.ui.controller.level.LevelSubController;
-import com.example.demo.ui.dtos.lvl.AllLevelRequest;
 import com.example.demo.ui.dtos.lvl.LevelCategoryRequest;
 import com.example.demo.ui.dtos.lvl.LevelListResponse;
 import com.example.demo.ui.dtos.lvl.LevelRequest;
@@ -32,12 +32,8 @@ import com.example.demo.ui.dtos.lvl.LevelResponse;
 
 import jakarta.persistence.EntityNotFoundException;
 
-
 @ExtendWith(MockitoExtension.class)
 class LevelSubControllerTest {
-
-    @Mock
-    private CredentialsValidator credentialsValidator;
 
     @Mock
     private LevelService levelService;
@@ -48,82 +44,44 @@ class LevelSubControllerTest {
     @InjectMocks
     private LevelSubController levelSubController;
 
-    private final String VALID_CREDENTIALS = "encrypted_token_123";
-    private final String INVALID_CREDENTIALS = "invalid_token";
-    private final Long USER_ID = 1L;
     private final Long LEVEL_ID = 100L;
 
 
-    private User mockUser;
-
-    @BeforeEach
-    void setUp() {
-        mockUser = mock(User.class);
-    }
-
     @Test
     void getLevelById_whenLevelExists() {
-        LevelRequest request = mock(LevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-        when(request.id()).thenReturn(LEVEL_ID);
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("user@test.com");
 
-        when(credentialsValidator.check(VALID_CREDENTIALS)).thenReturn(Optional.of(mockUser));
-        when(mockUser.getId()).thenReturn(USER_ID);
-
+        LevelRequest request = new LevelRequest(LEVEL_ID);
         Level mockLevel = mock(Level.class);
-        when(levelService.getLevelById(LEVEL_ID)).thenReturn(mockLevel);
-        when(solutionService.isLevelPassedByUser(LEVEL_ID, USER_ID)).thenReturn(true);
 
-        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request);
+        when(levelService.getLevelById(LEVEL_ID)).thenReturn(mockLevel);
+        when(solutionService.isLevelPassedByUserEmail(LEVEL_ID, "user@test.com")).thenReturn(true);
+
+        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request, auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-
     }
 
     @Test
     void getLevelById_whenLevelNotFound() {
-        LevelRequest request = mock(LevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-        when(request.id()).thenReturn(LEVEL_ID);
+        Authentication auth = mock(Authentication.class);
 
-        when(credentialsValidator.check(VALID_CREDENTIALS)).thenReturn(Optional.of(mockUser));
+        LevelRequest request = new LevelRequest(LEVEL_ID);
         when(levelService.getLevelById(LEVEL_ID)).thenThrow(new EntityNotFoundException("Level not found"));
 
-        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request);
+        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request, auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNull();
     }
 
-    @Test
-    void getLevelById_whenInvalidCredentials() {
-        LevelRequest request = mock(LevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(INVALID_CREDENTIALS);
-        when(credentialsValidator.check(INVALID_CREDENTIALS)).thenReturn(Optional.empty());
-
-        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        assertThat(response.getBody()).isNull();
-    }
-    
-    @Test
-    void getLevelById_whenCredentialsAreNullOrEmpty() {
-        LevelRequest request = mock(LevelRequest.class);
-        when(request.credentialEncripted()).thenReturn("");
-        ResponseEntity<LevelResponse> response = levelSubController.getLevelById(request);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
 
     @Test
-    void getAllLevels_whenValidCredentials() {
-        AllLevelRequest request = mock(AllLevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-
-        when(credentialsValidator.check(VALID_CREDENTIALS)).thenReturn(Optional.of(mockUser));
-        when(mockUser.getId()).thenReturn(USER_ID);
+    void getAllLevels_whenLevelsExist() {
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("user@test.com");
 
         Level level1 = mock(Level.class);
         Level level2 = mock(Level.class);
@@ -131,84 +89,61 @@ class LevelSubControllerTest {
         when(level2.getId()).thenReturn(2L);
 
         when(levelService.getAllLevels()).thenReturn(List.of(level1, level2));
-        when(solutionService.isLevelPassedByUser(1L, USER_ID)).thenReturn(true);
-        when(solutionService.isLevelPassedByUser(2L, USER_ID)).thenReturn(false);
+        when(solutionService.isLevelPassedByUserEmail(anyLong(), anyString())).thenReturn(false);
 
-        ResponseEntity<LevelListResponse> response = levelSubController.getAllLevels(request);
+        ResponseEntity<LevelListResponse> response = levelSubController.getAllLevels(auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
     }
 
     @Test
-    void getAllLevels_whenInvalidCredentials() {
-        AllLevelRequest request = mock(AllLevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(INVALID_CREDENTIALS);
-        when(credentialsValidator.check(INVALID_CREDENTIALS)).thenReturn(Optional.empty());
+    void getAllLevels_whenNoLevels_returns404() {
+        Authentication auth = mock(Authentication.class);
+        when(levelService.getAllLevels()).thenReturn(Collections.emptyList());
 
-        ResponseEntity<LevelListResponse> response = levelSubController.getAllLevels(request);
+        ResponseEntity<LevelListResponse> response = levelSubController.getAllLevels(auth);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-    
-    @Test
-    void getAllLevels_whenCredentialsAreNullOrEmpty() {
-        AllLevelRequest request = mock(AllLevelRequest.class);
-        when(request.credentialEncripted()).thenReturn(null);
-        ResponseEntity<LevelListResponse> response = levelSubController.getAllLevels(request);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 
     @Test
-    void getLevelsByCategory_whenValidCredentials() {
-        LevelCategoryRequest request = mock(LevelCategoryRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-        when(request.category()).thenReturn("SECUENCIALES");
+    void getLevelsByCategory_whenValidCategory() {
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("user@test.com");
 
-        when(credentialsValidator.check(VALID_CREDENTIALS)).thenReturn(Optional.of(mockUser));
-        when(mockUser.getId()).thenReturn(USER_ID);
-
+        LevelCategoryRequest request = new LevelCategoryRequest("SECUENCIALES");
         Level levelMock = mock(Level.class);
         when(levelMock.getId()).thenReturn(1L);
-        when(levelService.getLevelsByCategory(any(Category.class))).thenReturn(List.of(levelMock));
-        when(solutionService.isLevelPassedByUser(1L, USER_ID)).thenReturn(true);
 
-        ResponseEntity<LevelListResponse> response = levelSubController.getLevelsByCategory(request);
+        when(levelService.getLevelsByCategory(any(Category.class))).thenReturn(List.of(levelMock));
+        when(solutionService.isLevelPassedByUserEmail(anyLong(), anyString())).thenReturn(true);
+
+        ResponseEntity<LevelListResponse> response = levelSubController.getLevelsByCategory(request, auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
     }
 
     @Test
-    void getLevelsByCategory_whenInvalidCredentials() {
-        LevelCategoryRequest request = mock(LevelCategoryRequest.class);
-        when(request.credentialEncripted()).thenReturn(INVALID_CREDENTIALS);
-        when(request.category()).thenReturn("BAD_CATEGORIA");    
-        when(credentialsValidator.check(INVALID_CREDENTIALS)).thenReturn(Optional.empty());
-        ResponseEntity<LevelListResponse> response = levelSubController.getLevelsByCategory(request);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-    
-    @Test
-    void getLevelsByCategory_whenInvalidCategoryEnum() {
-        LevelCategoryRequest request = mock(LevelCategoryRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-        when(request.category()).thenReturn("INVALID_CATEGORY");
+    void getLevelsByCategory_whenInvalidCategoryEnum_throwsException() {
+        Authentication auth = mock(Authentication.class);
+        LevelCategoryRequest request = new LevelCategoryRequest("INVALID_CATEGORY");
 
-        when(credentialsValidator.check(VALID_CREDENTIALS)).thenReturn(Optional.of(mockUser));
-
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            levelSubController.getLevelsByCategory(request);
-        });
+        assertThatThrownBy(() -> levelSubController.getLevelsByCategory(request, auth))
+                .isInstanceOf(IllegalArgumentException.class);
     }
-    
+
     @Test
-    void getLevelsByCategory_whenCategoryIsNullOrEmpty() {
-        LevelCategoryRequest request = mock(LevelCategoryRequest.class);
-        when(request.credentialEncripted()).thenReturn(VALID_CREDENTIALS);
-        when(request.category()).thenReturn(""); 
-        ResponseEntity<LevelListResponse> response = levelSubController.getLevelsByCategory(request);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    void getLevelsByCategory_whenNoLevels_returns404() {
+        Authentication auth = mock(Authentication.class);
+        when(levelService.getLevelsByCategory(any(Category.class))).thenReturn(Collections.emptyList());
+
+        LevelCategoryRequest request = new LevelCategoryRequest("SECUENCIALES");
+
+        ResponseEntity<LevelListResponse> response = levelSubController.getLevelsByCategory(request, auth);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

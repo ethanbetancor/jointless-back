@@ -5,5 +5,5 @@ import java.util.List;
 
 public record LevelListResponse(
 		List<LevelResponse> listLevels
-		) {
+) {
 }

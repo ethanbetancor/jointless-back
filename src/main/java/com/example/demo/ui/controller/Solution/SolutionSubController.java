@@ -2,7 +2,6 @@ package com.example.demo.ui.controller.Solution;
 
 import com.example.demo.domain.entities.Solution;
 import com.example.demo.domain.entities.User;
-import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.ui.dtos.solution.SolutionListResponse;
 import com.example.demo.ui.dtos.solution.SolutionRequest;
@@ -15,25 +14,26 @@ import org.hibernate.query.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
 public class SolutionSubController {
     private final SolutionService solutionService;
-    private final CredentialsValidator credentialsValidator;
+    private final UserService userService;
 
-
-    SolutionSubController(SolutionService solutionService, CredentialsValidator credentialsValidator) {
+    SolutionSubController(SolutionService solutionService, UserService userService) {
         this.solutionService = solutionService;
-        this.credentialsValidator = credentialsValidator;
+        this.userService = userService;
     }
 
-    public ResponseEntity<SubmitResponse> submit(String code, Long levelId, String credentialsEncrypted){
-        if(credentialsEncrypted == null ||levelId == null ||code == null || code.isBlank() || credentialsEncrypted.isBlank()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        User user = credentialsValidator.check(credentialsEncrypted).orElse(null);
-        if(user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        SubmitResponse response = solutionService.submit(code, levelId, user.getId());
+    public ResponseEntity<SubmitResponse> submit(@Valid SubmitRequest request, Authentication authentication) {
+        User user = userService.getUserByEmail(authentication.getName());
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        SubmitResponse response = solutionService.submit(request.code(), request.levelId(), user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
