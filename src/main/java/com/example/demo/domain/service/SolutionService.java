@@ -9,12 +9,9 @@ import com.example.demo.domain.entities.Solution;
 import com.example.demo.domain.entities.Test;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.result.DockerResult;
-import com.example.demo.ui.dtos.solution.SolutionResponse;
 import com.example.demo.ui.dtos.solution.SubmitResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,7 +84,7 @@ public class SolutionService {
     		return solutionRepository.existsByLevelIdAndUser_EmailAndPassedTrueAndPassedTrue(idLevel, email);
     }
     
-    public List<Solution> getByUser(long idUser) {
-        return solutionRepository.findByUserId(idUser);
+    public List<Solution> getByUser(String email) {
+        return solutionRepository.findByUser_Email(email);
     }
 }
