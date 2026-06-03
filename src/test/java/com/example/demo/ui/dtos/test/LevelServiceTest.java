@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.example.demo.data.Category;
+import com.example.demo.domain.entities.Category;
 import com.example.demo.data.LevelRepository;
 import com.example.demo.domain.entities.Level;
 import com.example.demo.domain.service.LevelService;

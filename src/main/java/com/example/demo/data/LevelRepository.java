@@ -4,6 +4,7 @@ package com.example.demo.data;
 
 import java.util.List;
 
+import com.example.demo.domain.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.domain.entities.Level;

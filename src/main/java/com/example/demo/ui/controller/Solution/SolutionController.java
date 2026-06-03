@@ -1,7 +1,9 @@
 package com.example.demo.ui.controller.Solution;
 
 import com.example.demo.ui.dtos.solution.*;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +18,12 @@ public class SolutionController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<SubmitResponse> submit(@RequestBody SubmitRequest request) {
-        return solutionSubController.submit(request.code(), request.levelId(), request.credentialsEncrypted());
+    public ResponseEntity<SubmitResponse> submit(@RequestBody @Valid SubmitRequest request, @Valid Authentication authentication) {
+        return solutionSubController.submit(request, authentication);
     }
 
     @PostMapping("/level")
-    public ResponseEntity<List<SolutionResponse>> getByLevel(@RequestBody long levelId) {
+    public ResponseEntity<List<SolutionResponse>> getByLevel(@RequestBody @Valid long levelId) {
         return ResponseEntity.ok(List.of());
     }
 
