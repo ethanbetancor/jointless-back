@@ -22,15 +22,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-import com.example.demo.domain.entities.Level;
-import com.example.demo.domain.entities.Solution;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.SolutionService;
 import com.example.demo.domain.service.UserService;
 import com.example.demo.ui.controller.Solution.SolutionSubController;
 import com.example.demo.ui.dtos.solution.SubmitRequest;
 import com.example.demo.ui.dtos.solution.SubmitResponse;
-import com.example.demo.ui.dtos.solution.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SolutionSubControllerTest {

@@ -1,6 +1,8 @@
 package com.example.demo.ui.controller.Solution;
 
 import com.example.demo.ui.dtos.solution.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,20 +18,22 @@ public class SolutionController {
     public SolutionController(SolutionSubController solutionSubController) {
         this.solutionSubController = solutionSubController;
     }
-
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/submit")
     public ResponseEntity<SubmitResponse> submit(@RequestBody @Valid SubmitRequest request, @Valid Authentication authentication) {
         return solutionSubController.submit(request, authentication);
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/level")
-    public ResponseEntity<List<SolutionResponse>> getByLevel(@RequestBody @Valid long levelId) {
+    public ResponseEntity<List<SolutionResponse>> getByLevel(@RequestBody @Valid long levelId, @Valid Authentication authentication) {
         return ResponseEntity.ok(List.of());
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/user")
-    public ResponseEntity<SolutionListResponse> getByUser(@RequestBody SolutionRequest request) {
-        return solutionSubController.getByUser(request);
+    public ResponseEntity<SolutionListResponse> getByUser(@Valid Authentication authentication) {
+        return solutionSubController.getByUser(authentication);
     }
 
 }
