@@ -50,8 +50,8 @@ public class User implements UserDetails {
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getName() {
+		return username;
 	}
 
 	public void setEmail(String email) {

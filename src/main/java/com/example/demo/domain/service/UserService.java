@@ -31,7 +31,7 @@ public class UserService {
     public LoginResponse logIn(LoginRequest request) {
         User user = credentialsValidator.check(request.email(), request.encryptedPassword()).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail o contraseña"));
         String token = jwtService.generateToken(user);
-        return new LoginResponse(token, user.getUsername());
+        return new LoginResponse(token, user.getName());
     }
 
     public RegisterResponse register(RegisterRequest request) {
