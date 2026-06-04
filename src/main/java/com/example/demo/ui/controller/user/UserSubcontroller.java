@@ -22,6 +22,8 @@ class UserSubcontroller {
             return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse(null, e.getMessage()));
         }
     }
 
@@ -30,6 +32,7 @@ class UserSubcontroller {
         if (response.token() == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+        userService.sendEmail(request.email());
         return ResponseEntity.ok(response);
     }
 
@@ -38,5 +41,12 @@ class UserSubcontroller {
             return ResponseEntity.ok(new ChangePasswordResponse("Cambio de la password exitoso"));
         }
         return ResponseEntity.badRequest().body(new ChangePasswordResponse("No se pudo realizar el cambio"));
+    }
+
+    protected ResponseEntity<VerifyResponse> verify(VerifyRequest request) {
+        if(userService.verify(request.token())){
+            return ResponseEntity.ok(new VerifyResponse("Usuario verificado exitosamente"));
+        }
+        return ResponseEntity.badRequest().body(new VerifyResponse("Token de verificación inválido o expirado"));
     }
 }

@@ -38,4 +38,9 @@ public class UserController {
     public ResponseEntity<ChangePasswordResponse> changePassword(@RequestBody @Valid ChangePasswordRequest request, Authentication authentication) {
         return userSubcontroller.changePassword(request, authentication);
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<VerifyResponse> verify(@RequestParam String token){
+        return userSubcontroller.verify(new VerifyRequest(token));
+    }
 }

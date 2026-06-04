@@ -32,6 +32,9 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	@Column(nullable = false)
+	private boolean isActive;
+
 	public User() {}
 
 	public User(long id, String email, String username, String password) {
@@ -40,6 +43,7 @@ public class User implements UserDetails {
 		this.username = username;
 		this.password = password;
 		this.role = Role.USER;
+		this.isActive = false;
 	}
 
 	public long getId() {
@@ -76,5 +80,18 @@ public class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return isActive;
 	}
 }
