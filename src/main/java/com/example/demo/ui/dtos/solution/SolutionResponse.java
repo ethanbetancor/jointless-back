@@ -5,6 +5,7 @@ public record SolutionResponse(
 		Long levelId,
 		Long userId,
 		String code,
+		String improvementSuggestion,
 		boolean isPassed
 ) {
 }

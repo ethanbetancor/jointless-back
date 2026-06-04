@@ -38,7 +38,7 @@ public class SolutionSubController {
 
         List<Solution> solutions = solutionService.getByUser(authentication.getName());
         SolutionListResponse response = new SolutionListResponse(solutions.stream().map(s->{
-            return new SolutionResponse(s.getId(),s.getLevel().getId(),s.getUser().getId(),s.getCode(),s.isPassed());
+            return new SolutionResponse(s.getId(),s.getLevel().getId(),s.getUser().getId(),s.getCode(),s.getImprovementSuggestion(),s.isPassed());
         }).collect(Collectors.toList()));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

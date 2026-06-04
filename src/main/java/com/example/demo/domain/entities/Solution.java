@@ -19,15 +19,19 @@ public class Solution {
 
     @Column(columnDefinition = "TEXT")
     private String code;
-
+    
+    @Column(columnDefinition = "TEXT")
+    private String improvementSuggestion;
+    
     private boolean passed;
 
     public Solution() {}
 
-    public Solution(Level level, User user, String code, boolean passed) {
+    public Solution(Level level, User user, String code, String improvementSuggestion,boolean passed) {
         this.level = level;
         this.user = user;
         this.code = code;
+        this.improvementSuggestion = improvementSuggestion;
         this.passed = passed;
     }
 
@@ -45,6 +49,10 @@ public class Solution {
 
 	public String getCode() {
 		return code;
+	}
+	
+	public String getImprovementSuggestion() {
+		return improvementSuggestion;
 	}
 
 	public boolean isPassed() {
@@ -65,6 +73,10 @@ public class Solution {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+	
+	public void setImprovementSuggestion(String improvementSuggestion) {
+		this.improvementSuggestion = improvementSuggestion;
 	}
 
 	public void setPassed(boolean passed) {
