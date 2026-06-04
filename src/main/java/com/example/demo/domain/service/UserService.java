@@ -7,6 +7,7 @@ import com.example.demo.ui.dtos.user.*;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,8 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
     
-    public boolean changePassword(ChangePasswordRequest request) {
-	    	User user = this.getUserByEmail(request.email());
+    public boolean changePassword(ChangePasswordRequest request, Authentication authentication) {
+	    	User user = this.getUserByEmail(authentication.getName());
 	    	String password = cryptographyService.decrypt(request.newPassword());
 	    	if (user == null) return false;
 	    	if (passwordEncoder.matches(password , user.getPassword())) return false;

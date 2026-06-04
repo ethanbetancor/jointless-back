@@ -5,6 +5,7 @@ import com.example.demo.ui.dtos.user.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,8 +33,8 @@ class UserSubcontroller {
         return ResponseEntity.ok(response);
     }
 
-    protected ResponseEntity<ChangePasswordResponse> changePassword(ChangePasswordRequest request) {
-        if (userService.changePassword(request)) {
+    protected ResponseEntity<ChangePasswordResponse> changePassword(ChangePasswordRequest request, Authentication authentication) {
+        if (userService.changePassword(request, authentication)) {
             return ResponseEntity.ok(new ChangePasswordResponse("Cambio de la password exitoso"));
         }
         return ResponseEntity.badRequest().body(new ChangePasswordResponse("No se pudo realizar el cambio"));

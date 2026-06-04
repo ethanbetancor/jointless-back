@@ -18,6 +18,8 @@ import com.example.demo.domain.entities.User;
 import com.example.demo.domain.security.CredentialsValidator;
 import com.example.demo.ui.dtos.user.*;
 
+import org.springframework.security.core.Authentication;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
@@ -110,12 +112,14 @@ public class UserServiceTest {
         User user = new User();
         user.setPassword("oldEncoded");
 
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("user@test.com");
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
         when(cryptographyService.decrypt(anyString())).thenReturn("plainNewPassword");
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("newEncoded");
 
-        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedNewPass", "user@test.com"));
+        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedNewPass"), auth);
 
         assertTrue(result);
         verify(userRepository).save(any(User.class));
@@ -126,11 +130,13 @@ public class UserServiceTest {
         User user = new User();
         user.setPassword("encoded");
 
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("user@test.com");
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
         when(cryptographyService.decrypt(anyString())).thenReturn("samePassword");
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
-        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedSame", "user@test.com"));
+        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedSame"), auth);
 
         assertFalse(result);
         verify(userRepository, times(0)).save(any());
@@ -138,9 +144,11 @@ public class UserServiceTest {
 
     @Test
     void shouldReturnFalseWhenUserNotFoundOnChangePassword() {
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("notfound@test.com");
+        when(userRepository.findByEmail("notfound@test.com")).thenReturn(Optional.empty());
 
-        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedNewPass", "notfound@test.com"));
+        boolean result = userService.changePassword(new ChangePasswordRequest("encryptedNewPass"), auth);
 
         assertFalse(result);
         verify(userRepository, times(0)).save(any());

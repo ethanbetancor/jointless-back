@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import com.example.demo.domain.service.UserService;
 import com.example.demo.ui.dtos.user.*;
@@ -71,10 +72,11 @@ public class UserSubControllerTest {
 
     @Test
     void changePassword_whenSuccess_returns200WithMessage() {
-        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass", "user@test.com");
-        when(userService.changePassword(request)).thenReturn(true);
+        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass");
+        Authentication auth = mock(Authentication.class);
+        when(userService.changePassword(request, auth)).thenReturn(true);
 
-        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request);
+        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request, auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
@@ -83,10 +85,11 @@ public class UserSubControllerTest {
 
     @Test
     void changePassword_whenFails_returns400WithMessage() {
-        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass", "user@test.com");
-        when(userService.changePassword(request)).thenReturn(false);
+        ChangePasswordRequest request = new ChangePasswordRequest("newEncPass");
+        Authentication auth = mock(Authentication.class);
+        when(userService.changePassword(request, auth)).thenReturn(false);
 
-        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request);
+        ResponseEntity<ChangePasswordResponse> response = controller.changePassword(request, auth);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).isNotNull();
