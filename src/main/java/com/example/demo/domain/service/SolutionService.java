@@ -10,9 +10,11 @@ import com.example.demo.domain.entities.Test;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.service.result.DockerResult;
 import com.example.demo.ui.dtos.solution.SubmitResponse;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,7 +80,11 @@ public class SolutionService {
                 .orElse("test fallido");
     }
     
-    public boolean isLevelPassedByUser(Long idLevel , Long idUser) {
-    		return solutionRepository.existsByLevelIdAndUserIdAndPassedTrue(idLevel, idUser);
+    public boolean isLevelPassedByUserEmail(Long idLevel , String email) {
+    		return solutionRepository.existsByLevelIdAndUser_EmailAndPassedTrueAndPassedTrue(idLevel, email);
+    }
+    
+    public List<Solution> getByUser(String email) {
+        return solutionRepository.findByUser_Email(email);
     }
 }

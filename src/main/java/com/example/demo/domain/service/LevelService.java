@@ -1,15 +1,12 @@
 package com.example.demo.domain.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.data.Category;
+import com.example.demo.domain.entities.Category;
 import com.example.demo.data.LevelRepository;
 import com.example.demo.domain.entities.Level;
-import com.example.demo.ui.dtos.lvl.LevelResponse;
 
 import jakarta.persistence.EntityNotFoundException;
 

@@ -1,7 +1,5 @@
 package com.example.demo.domain.entities;
 
-import com.example.demo.data.Category;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

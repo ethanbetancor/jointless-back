@@ -3,7 +3,7 @@ package com.example.demo.domain.service;
 import com.example.demo.data.UserRepository;
 import com.example.demo.domain.entities.User;
 import com.example.demo.domain.security.CredentialsValidator;
-import com.example.demo.ui.dtos.user.ChangePasswordRequest;
+import com.example.demo.ui.dtos.user.*;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -17,27 +17,30 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CredentialsValidator credentialsValidator;
+    private final JwtService jwtService;
 
-    public UserService(CryptographyService cryptographyService, UserRepository userRepository, PasswordEncoder passwordEncoder, CredentialsValidator credentialsValidator) {
+    public UserService(CryptographyService cryptographyService, UserRepository userRepository, PasswordEncoder passwordEncoder, CredentialsValidator credentialsValidator, JwtService jwtService) {
         this.cryptographyService = cryptographyService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.credentialsValidator = credentialsValidator;
+        this.jwtService = jwtService;
     }
 
-    public boolean logIn(String credentialsEncripted) {
-        return credentialsValidator.check(credentialsEncripted).isPresent();
+    public LoginResponse logIn(LoginRequest request) {
+        User user = credentialsValidator.check(request.email(), request.encryptedPassword()).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail o contraseña"));
+        String token = jwtService.generateToken(user);
+        return new LoginResponse(token);
     }
 
-    public boolean register(String credentialsEncripted) {
-        String credentials = cryptographyService.decrypt(credentialsEncripted);
-        String[] parts = credentials.split(":");
-        String email = parts[0];
-        String user = parts[1];
-        String password = parts[2];
-        if(userRepository.findByEmail(email).isPresent()) return false;
-        userRepository.save(new User(0, email, user, passwordEncoder.encode(password)));
-        return true;
+    public RegisterResponse register(RegisterRequest request) {
+        String password = cryptographyService.decrypt(request.encryptedPassword());
+
+        if(userRepository.findByEmail(request.email()).isPresent()) return new RegisterResponse(null);
+        User user = new User(0, request.email(), request.username(), passwordEncoder.encode(password));
+        userRepository.save(user);
+        String token = jwtService.generateToken(user);
+        return new RegisterResponse(token);
     }
 
     public boolean logOut(String credentialsEncripted) {
@@ -48,16 +51,12 @@ public class UserService {
         return true;
     }
 
-    public User getUser(String credentialsEncripted) {
-        String credentials = cryptographyService.decrypt(credentialsEncripted);
-        String[] parts = credentials.split(":");
-        String email = parts[0];
-        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("No existe ningun usuario con este mail"));
-        
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
     
     public boolean changePassword(ChangePasswordRequest request) {
-	    	User user = this.getUser(request.credentialEncripted());
+	    	User user = this.getUserByEmail(request.email());
 	    	String password = cryptographyService.decrypt(request.newPassword());
 	    	if (user == null) return false;
 	    	if (passwordEncoder.matches(password , user.getPassword())) return false;
