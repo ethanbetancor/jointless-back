@@ -46,7 +46,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http){
         		http
-        			.cors(cors -> {})
+        		    .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/**").permitAll()
