@@ -47,6 +47,7 @@ public class UserServiceTest {
 
         assertNotNull(result);
         assertEquals("jwt-token", result.token());
+        assertEquals(user.getName(), result.username());
     }
 
     @Test
@@ -56,6 +57,16 @@ public class UserServiceTest {
         when(credentialsValidator.check(anyString(), anyString())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> userService.logIn(request));
+    }
+
+    @Test
+    void shouldThrowWhenUserIsNotActive() {
+        User inactiveUser = new User(); // isActive es false por defecto
+        LoginRequest request = new LoginRequest("user@test.com", "encPass");
+
+        when(credentialsValidator.check(anyString(), anyString())).thenReturn(Optional.of(inactiveUser));
+
+        assertThrows(IllegalStateException.class, () -> userService.logIn(request));
     }
 
 
