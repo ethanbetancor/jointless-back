@@ -26,7 +26,7 @@ class GroqSubController {
     }
     
     private ResponseEntity<ApiResponse> verifyResponse(GroqResponse response) {
-    	if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    	if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         
         return ResponseEntity.ok().body(new ApiResponse(response.choices().get(0).message().content())); 
     }
