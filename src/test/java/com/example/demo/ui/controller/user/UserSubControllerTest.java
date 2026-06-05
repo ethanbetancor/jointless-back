@@ -47,7 +47,7 @@ public class UserSubControllerTest {
     @Test
     void login_whenValidCredentials_returns200WithToken() {
         LoginRequest request = new LoginRequest("user@test.com", "enc");
-        when(userService.logIn(request)).thenReturn(new LoginResponse("jwt-token", "John"));
+        when(userService.logIn(request)).thenReturn(new LoginResponse("jwt-token","username"));
 
         ResponseEntity<LoginResponse> response = controller.login(request);
 

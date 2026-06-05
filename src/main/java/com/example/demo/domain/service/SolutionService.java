@@ -21,13 +21,15 @@ import java.util.stream.Collectors;
 public class SolutionService {
 
     private final DockerService dockerService;
+    private final GroqService groqService;
     private final TestRepository testRepository;
     private final SolutionRepository solutionRepository;
     private final LevelRepository levelRepository;
     private final UserRepository userRepository;
 
-    public SolutionService(DockerService dockerService, TestRepository testRepository, SolutionRepository solutionRepository, LevelRepository levelRepository, UserRepository userRepository) {
+    public SolutionService(DockerService dockerService, TestRepository testRepository, SolutionRepository solutionRepository, LevelRepository levelRepository, UserRepository userRepository,GroqService groqService) {
         this.dockerService = dockerService;
+		this.groqService = groqService;
         this.testRepository = testRepository;
         this.solutionRepository = solutionRepository;
         this.levelRepository = levelRepository;
@@ -41,7 +43,8 @@ public class SolutionService {
         if(passed) {
         	Level level = levelRepository.findById(levelId).orElseThrow();
             User user = userRepository.findById(userId).orElseThrow();
-            Solution solution = new Solution(level, user, code, passed);
+            String improvementSuggestion = groqService.askGroqForImprovement(code).choices().get(0).message().content();
+            Solution solution = new Solution(level, user, code, improvementSuggestion,passed);
             solutionRepository.save(solution);
         }
 
