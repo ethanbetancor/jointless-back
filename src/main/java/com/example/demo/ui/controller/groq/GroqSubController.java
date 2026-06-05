@@ -18,16 +18,11 @@ class GroqSubController {
     }
 
     public ResponseEntity<ApiResponse> answerClue(ApiRequest apiRequest) {   		
-        return verifyResponse(groqService.askGroqForClue(apiRequest.userPrompt()));      
-    }
-    
-    public ResponseEntity<ApiResponse> answerImprovement(ApiRequest apiRequest) {
-    	return verifyResponse(groqService.askGroqForImprovement(apiRequest.userPrompt()));           
-    }
-    
-    private ResponseEntity<ApiResponse> verifyResponse(GroqResponse response) {
-    	if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        GroqResponse response = groqService.askGroqForClue(apiRequest.userPrompt());  
+        if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         
         return ResponseEntity.ok().body(new ApiResponse(response.choices().get(0).message().content())); 
+        
     }
+  
 }

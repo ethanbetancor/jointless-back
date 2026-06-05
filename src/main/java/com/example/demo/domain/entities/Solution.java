@@ -17,7 +17,8 @@ public class Solution {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String code;
     
     @Column(columnDefinition = "TEXT")
