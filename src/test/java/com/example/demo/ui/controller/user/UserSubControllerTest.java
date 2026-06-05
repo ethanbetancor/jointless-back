@@ -36,6 +36,15 @@ public class UserSubControllerTest {
     }
 
     @Test
+    void login_whenUserNotVerified_returns403() {
+        LoginRequest request = new LoginRequest("inactive@test.com", "enc");
+        when(userService.logIn(request)).thenThrow(new IllegalStateException("no verificado"));
+
+        ResponseEntity<LoginResponse> response = controller.login(request);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     void login_whenValidCredentials_returns200WithToken() {
         LoginRequest request = new LoginRequest("user@test.com", "enc");
         when(userService.logIn(request)).thenReturn(new LoginResponse("jwt-token","username"));

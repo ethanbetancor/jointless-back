@@ -23,6 +23,9 @@ public class JwtService<T> {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    @Value("${jwt.email-expiration}")
+    private long emailExpiration;
+
 
     public String getUsername(String token) {
         return getClaim(token, Claims::getSubject);
@@ -31,6 +34,8 @@ public class JwtService<T> {
     private Date getExpiration(String token) {
         return getClaim(token, Claims::getExpiration);
     }
+
+    public String getType(String token) {return getClaim(token, claims -> claims.get("type", String.class));}
 
     private <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = getAllClaims(token);
@@ -54,12 +59,27 @@ public class JwtService<T> {
         return generateToken(new HashMap<>(), user);
     }
 
+    public String generateEmailToken(User user) {
+        return generateEmailToken(new HashMap<>(), user);
+    }
+
     public String generateToken(Map<String, Object> claims, User user) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(user.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+    public String generateEmailToken(Map<String, Object> claims, User user) {
+        return Jwts.builder()
+                .claims(claims)
+                .subject(user.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + emailExpiration))
+                .claim("type", "EMAIL_VERIFICATION")
                 .signWith(getSignInKey())
                 .compact();
     }
