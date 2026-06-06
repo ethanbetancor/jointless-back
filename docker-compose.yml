@@ -1,0 +1,7 @@
+services:
+  java-sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: java-sandbox
+    container_name: java-sandbox
