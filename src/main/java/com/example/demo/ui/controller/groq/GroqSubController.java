@@ -9,7 +9,7 @@ import com.example.demo.ui.dtos.groq.ApiResponse;
 import com.example.demo.ui.dtos.groq.GroqResponse;
 
 @Component
-class GroqSubController {
+public class GroqSubController {
     
     private final GroqService groqService;
 
