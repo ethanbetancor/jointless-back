@@ -9,7 +9,7 @@ import com.example.demo.ui.dtos.groq.ApiResponse;
 import com.example.demo.ui.dtos.groq.GroqResponse;
 
 @Component
-class GroqSubController {
+public class GroqSubController {
     
     private final GroqService groqService;
 
@@ -17,14 +17,12 @@ class GroqSubController {
         this.groqService = groqService;
     }
 
-    ResponseEntity<ApiResponse> answer(ApiRequest apiRequest) {
-    	
-    		if (apiRequest == null || apiRequest.userPrompt() == null || apiRequest.userPrompt().isBlank()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    		
-        GroqResponse response = groqService.askGroq(apiRequest.userPrompt());
-            
-        if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            
-        return ResponseEntity.ok().body(new ApiResponse(response.choices().get(0).message().content()));          
+    public ResponseEntity<ApiResponse> answerClue(ApiRequest apiRequest) {   		
+        GroqResponse response = groqService.askGroqForClue(apiRequest.userPrompt());  
+        if (response == null || response.choices().isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        
+        return ResponseEntity.ok().body(new ApiResponse(response.choices().get(0).message().content())); 
+        
     }
+  
 }
