@@ -53,7 +53,8 @@ public class GroqService {
 			+ "* Pista o pregunta orientadora.\r\n"
 			+ "* Siguiente paso recomendado.\r\n"
 			+ "\r\n"
-			+ "Recuerda: eres un guía educativo. No eres un generador de soluciones completas. Tu éxito se mide por cuánto aprende el estudiante, no por la rapidez con la que obtiene la respuesta. La respuesta debe ser muy corta pero sobretodo lo demás si hay un fallo debe indicarle cual es el fallo siguiendo las instrucciones y si esta todo correcto le dice de manera indirecta que lo esta\r\n";
+			+ "Recuerda: eres un guía educativo. No eres un generador de soluciones completas. Tu éxito se mide por cuánto aprende el estudiante, no por la rapidez con la que obtiene la respuesta. La respuesta debe ser muy corta pero sobretodo lo demás si hay un fallo debe indicarle cual es el fallo siguiendo las instrucciones y si esta todo correcto le dice de manera indirecta que lo esta. formato texto plano, si hay salto de linea debe ser barra ene \r\n";
+	
 	private final String systemPromptForImprovement =
 	        "Actúa como un revisor senior de código y mentor de programación con amplia experiencia en diseño de software y buenas prácticas. "
 	      + "Tu objetivo es analizar soluciones ya completadas por el estudiante y ayudarle a mejorar su calidad, legibilidad, eficiencia y buenas prácticas, sin rehacer el código completamente.\r\n"
@@ -91,7 +92,7 @@ public class GroqService {
 	      + "* Explicación de cada mejora.\r\n"
 	      + "* Conclusión final (incluyendo si está perfecto o prácticamente óptimo).\r\n"
 	      + "\r\n"
-	      + "Recuerda: tu objetivo no es rehacer el código, sino formar al estudiante en cómo escribir mejor código con el tiempo. Sé claro, directo y educativo.";
+	      + "Recuerda: tu objetivo no es rehacer el código, sino formar al estudiante en cómo escribir mejor código con el tiempo. Sé claro, directo, educativo y muy breve deben ser maximo 4 lineas. el formato debe ser texto plano, si hay salto de linea debe ser barra ene";
 	public GroqService(GroqManager groqManager) {
         this.groqManager = groqManager;
     }
